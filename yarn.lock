@@ -7238,10 +7238,10 @@ makeerror@1.0.x:
   dependencies:
     tmpl "1.0.x"
 
-mango-plugins-editor@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/mango-plugins-editor/-/mango-plugins-editor-0.2.2.tgz#677cac8d8f8d3d976432a6f44f596e812b68dfc2"
-  integrity sha512-lY3/77cB4Bu7a+HjOgoVUCQOmLbbMjV89cmAbcngdM+rbnY7dQ8EA8jA737sn3WDl/HAQLY63ApPBvAlP/344A==
+mango-plugins-editor@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/mango-plugins-editor/-/mango-plugins-editor-0.2.4.tgz#4cc7eadaae4c0865f32e15e037ea47cc1352aed9"
+  integrity sha512-dzerIVvsW1WtJqZpbuUoWJNprZlqtwubbVpsml0oZOfmv+cwDuW8ZddRipqDRe9tpm3eLhsyMN+zzkKU7Ca/qw==
   dependencies:
     "@material-ui/core" "^4.11.0"
     "@material-ui/icons" "^4.9.1"

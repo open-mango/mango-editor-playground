@@ -24,11 +24,43 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>MangoEditor Playground</title>
     <style>
+      pre {
+        padding: 0.625rem;
+        background: #eee;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+        margin: 0.5rem 0;
+      }
+      .markdown-body blockquote {
+        border-left: 0.25em solid #dfe2e5;
+        padding: 0 1rem;
+        margin: 0
+      }
+      .publicDraftStyleDefault-block {
+        position: relative;
+        display: flex;
+        align-items: center;
+        white-space: pre-wrap;
+      }
       .public-DraftEditorPlaceholder-root {
         position: absolute;
         color: #ccc;
+        z-index: -1;
+      }
+      .emoji-mart-search {
+        margin-bottom: 10px;
+        '& search' {
+          font-size: 14;
+        }
+      }
+      ul,
+      ol {
+        padding-left: 1rem;
       }
     </style>
   </head>
