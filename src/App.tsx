@@ -25,23 +25,23 @@ const useStyles = makeStyles((theme: Theme) =>
 const users = [
   {
     id: 1,
-    name: 'dante',
+    name: 'John Malkovichi',
     avatar: undefined,
-    email: 'dante@gmail.com',
+    email: 'john@gmail.com',
     online: true
   },
   {
     id: 2,
-    name: 'leeej',
+    name: 'Tom Hanks',
     avatar: undefined,
-    email: 'leeej@gmail.com',
+    email: 'tom@gmail.com',
     online: false
   },
   {
     id: 3,
-    name: 'wecanooo',
+    name: 'Scarlett Johansson',
     avatar: undefined,
-    email: 'wecanooo@gmail.com',
+    email: 'scarlett@gmail.com',
     online: true
   },
   {
@@ -166,6 +166,7 @@ const App = () => {
   return (
     <div className={classes.root}>
       <h1>Mango Editor</h1>
+      <strong style={{ marginBottom: '20px' }}>ver 0.2.4</strong>
       <div className="markdown-body">
         {messages.map((message, index) => (
           <div style={{ padding: 10 }}>
@@ -209,7 +210,7 @@ const App = () => {
         These buttons are not working yet. please read <a href="https://github.com/open-mango/editor#todo">document</a>
         <ul>
           <li>Text Format Button</li>
-          <li>Mention Button</li>
+          <li>Mention Button (developing)</li>
           <li>File Button</li>
         </ul>
       </div>
