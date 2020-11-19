@@ -1,10 +1,8 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import MangoEditor, { SyntheticKeyboardEvent } from 'mango-plugins-editor'
-import { ContentState, convertToRaw, convertFromRaw, EditorState, Editor } from 'draft-js';
-import { Avatar, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles, Theme, createStyles } from '@material-ui/core';
-
-import Brightness1RoundedIcon from '@material-ui/icons/Brightness1Rounded'
+import { convertToRaw, convertFromRaw, EditorState } from 'draft-js';
+import { makeStyles, Theme, createStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       alignItems: 'center',
       width: 500,
-      margin: '0 auto'
+      margin: '0 auto',
     },
     info: {
       marginTop: theme.spacing(2)
@@ -63,41 +61,12 @@ const users = [
 const App = () => {
   const classes = useStyles()
   const initialContent = EditorState.createEmpty()
-  const editorRef = React.useRef<Editor | null>(null)
   const [messages, setMessages] = React.useState<string[]>([])
   const [editorState, setEditorState] = React.useState<EditorState>(initialContent)
-  const [suggestions, setSuggestions] = React.useState<boolean>(false)
-  const [search, setSearch] = React.useState<string>('')
-
-  React.useEffect(() => {
-    window.addEventListener('keyup', handleKeyUp)
-
-    return () => {
-      window.removeEventListener('keyup', handleKeyUp)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [suggestions])
-
-  const handleKeyUp = () => {
-    if (!suggestions) return
-
-    const selection = window.getSelection();
-    if (!selection) return
-
-    const range = selection.getRangeAt(0);
-    let text = range.startContainer.textContent
-
-    if (!text) return
-    text = text.substring(0, range.startOffset);
-
-    const index = text.lastIndexOf('@')
-    const search = text.substring(index + 1)
-
-    setSearch(search)
-  }
+  const [editorMode, setEditorMode] = React.useState<'chat' | 'editor'>('chat')
 
   const handleReturn = (e: SyntheticKeyboardEvent, editorState: EditorState) => {
-    if (!e.shiftKey) {
+    if (editorMode === 'chat' && !e.shiftKey) {
       handleSendMessage(editorState)
       return 'handled'
     }
@@ -111,107 +80,47 @@ const App = () => {
 
     const message = JSON.stringify(convertToRaw(editorState.getCurrentContent()))
     setMessages(prev => [...prev, message])
-
-    setTimeout(() => {
-      _clearEditorState(editorState)
-    }, 10)
   }
-
-  const _clearEditorState = (editorState: EditorState) => {
-    const es = EditorState.push(editorState, ContentState.createFromText(''), 'remove-range')
-    setEditorState(EditorState.moveFocusToEnd(es))
-  }
-
-  const handleBeforeInput = (
-    chars: string,
-    editorState: EditorState,
-    _eventTimeStamp: number
-  ) => {
-    if (chars === undefined) return 'handled'
-
-    if (chars === '@' || chars === '#') {
-      const selection = editorState.getSelection();
-      const command = editorState
-        .getCurrentContent()
-        .getBlockForKey(selection.getStartKey())
-        .getText();
-
-      const index = command.lastIndexOf(' ');
-      if (index + 1 === command.length) {
-        setSuggestions(true)
-      }
-    }
-
-    return 'not-handled'
-  };
 
   const handleExtraButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    alert('extra button clicked')
+    setEditorMode(prev => prev === 'chat' ? 'editor' : 'chat')
   }
-
-  const handleClickSuggestion = (
-    user: {
-      id: number;
-      name: string;
-      avatar: string | undefined;
-      online: boolean;
-      email: string;
-    }
-  ) => {
-    setSuggestions(false)
-  }
-
-  const targetUsers = users.filter(u => u.name.includes(search))
 
   return (
     <div className={classes.root}>
       <h1>Mango Editor</h1>
-      <strong style={{ marginBottom: '20px' }}>ver 0.2.4</strong>
-      <div className="markdown-body">
+      <strong style={{ marginBottom: '20px' }}>ver 0.3.2</strong>
+      <div
+        className="markdown-body"
+        style={{
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
         {messages.map((message, index) => (
-          <div style={{ padding: 10 }}>
+          <div key={index} style={{ marginBottom: 6 }}>
             <MangoEditor
+              editorMode={editorMode}
               editorState={EditorState.createWithContent(convertFromRaw(JSON.parse(message)))}
               readOnly={true}
               onChange={setEditorState}
             />
           </div>
         ))}
-        {suggestions && (
-        <List
-          component="nav"
-          aria-labelledby="suggestions"
-          style={{ width: '100%' }}
-        >
-          {targetUsers.map(user => (
-            <ListItem key={user.id} button onClick={() => handleClickSuggestion(user)}>
-              <ListItemIcon>
-                <Avatar src={user.avatar} />
-              </ListItemIcon>
-              <ListItemText primary={user.name} />
-              <ListItemSecondaryAction>
-                <Brightness1RoundedIcon color={user.online ? 'secondary' : 'disabled'} fontSize="small" />
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
-        )}
         <MangoEditor
-          editorRef={editorRef}
-          placeholder="Enter your messages (Shift + Enter for new line)"
+          editorMode={editorMode}
+          mentions={users}
           editorState={editorState}
           onChange={setEditorState}
-          handleReturn={handleReturn}
+          onHandleReturn={handleReturn}
           onExtraButtonClick={handleExtraButtonClick}
-          onHandleBeforeInput={handleBeforeInput}
         />
       </div>
       <div className={classes.info}>
+        Press extra button to change editor mode 'chat' and 'editor'
         These buttons are not working yet. please read <a href="https://github.com/open-mango/editor#todo">document</a>
         <ul>
           <li>Text Format Button</li>
-          <li>Mention Button (developing)</li>
-          <li>File Button</li>
         </ul>
       </div>
     </div>
