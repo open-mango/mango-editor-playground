@@ -117,7 +117,7 @@ const App = () => {
         />
       </div>
       <div className={classes.info}>
-        Press extra button to change editor mode 'chat' and 'editor'
+        Press extra button to change editor mode 'chat' and 'editor'<br />
         These buttons are not working yet. please read <a href="https://github.com/open-mango/editor#todo">document</a>
         <ul>
           <li>Text Format Button</li>
